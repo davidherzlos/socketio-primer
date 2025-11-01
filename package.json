@@ -1,0 +1,17 @@
+{
+  "name": "socketio",
+  "version": "1.0.0",
+  "description": "Sockets exploration",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "DavidOC",
+  "license": "ISC",
+  "dependencies": {
+    "bufferutil": "^4.0.9",
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1",
+    "utf-8-validate": "^6.0.5"
+  }
+}
