@@ -1,6 +1,6 @@
-const path = require('path');
 const express = require('express');
 const { createServer } = require('http');
+const path = require('path');
 const { Server } = require('socket.io');
 
 // Web server.
@@ -10,18 +10,18 @@ const httpServer = createServer(app);
 // Sockets server.
 const io = new Server(httpServer);
 
-// Config express to set the path for statics.
+// Config express path for statics.
 app.use(express.static(path.join(__dirname, 'views')));
 
-// Dispatch routes (express server).
+// Dispatch routes (express).
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/views/index.html');
 })
 
-// Listen for socket connection (sockets).
+// Listen for socket connections.
 io.on('connection', socket => {
     console.log(socket);
 })
 
 // Listen for server connections.
-httpServer.lister();
+httpServer.listen(3000);
