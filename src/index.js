@@ -20,7 +20,6 @@ app.get('/', (req, res) => {
 
 // Listen for socket connections.
 io.on('connection', socket => {
-    console.log(socket);
 })
 
 // Listen for server connections.
