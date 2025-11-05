@@ -1,23 +1,21 @@
 const socket = io();
 
-// Connection events.
-
-// Hay un monton de eventos de conexion que se pueden detectar,
-// tanto de lado del cliente como del lado del servidor!
-
-
-socket.on('connect', () => {
-    console.log('socket was connected');
+// Listen welcome event emitted from the server.
+socket.on('welcome', data => {
+    document.querySelector('#welcomemsg').textContent = data;
 })
 
-socket.on('disconnect', () => {
-    console.log('socket was disconnected');
+// Emit the thanks event to the server.
+document.querySelector('#thanksmsg').addEventListener('click', () => {
+    socket.emit('thanks', 'Hi. Thanks! 😀');
 })
 
-socket.io.on('reconnect_attempt', () => {
-    console.log('attempting to reconnect');
+// Emit the hi event to the server.
+document.querySelector('#sayhi').addEventListener('click', () => {
+    socket.emit('hitoall', 'Hi all! 😀');
 })
 
-socket.io.on('reconnect', () => {
-    console.log('reconnected!');
+// Listen the hi event back to all from the server.
+socket.on('replytoall', data => {
+    document.querySelector('#hitoallmsg').append('</br>' + data);
 })

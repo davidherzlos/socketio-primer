@@ -20,6 +20,20 @@ app.get('/', (req, res) => {
 
 // Listen for socket connections.
 io.on('connection', socket => {
+
+    // Emit the welcome event to the client.
+    socket.emit('welcome', 'You are connected 😀');
+
+    // Listen thanks event emitted from the client.
+    socket.on('thanks', data => {
+        console.log(data);
+    })
+
+    // Listen hi event emitted from the client and emitted back to all.
+    socket.on('hitoall', data => {
+        io.emit('replytoall', data + ' ' + socket.id);
+    })
+
 })
 
 // Listen for server connections.
