@@ -1,19 +1,16 @@
-#circle {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    display: block;
-    width: 100px;
-    height: 100px;
-    background: #67b8ff;
-    transform: translateX(-50%) translateY(-50%);
-    border-radius: 100%;
-    -webkit-border-radius: 100%;
-    -moz-border-radius: 100%;
-    -ms-border-radius: 100%;
-    -o-border-radius: 100%;
-    -webkit-transform: translateX(-50%) translateY(-50%);
-    -moz-transform: translateX(-50%) translateY(-50%);
-    -ms-transform: translateX(-50%) translateY(-50%);
-    -o-transform: translateX(-50%) translateY(-50%);
+.room {
+    width: 50%;
+    min-height: 50px;
+    border: 3px solid orange;
+    margin: auto;
+    margin-bottom: 20px;
+    padding: 0;
+}
+.buttons {
+    width: 50%;
+    margin: auto;
+}
+.buttons button {
+    min-height: 50px;
+    border: 3px solid orange;
 }

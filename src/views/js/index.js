@@ -1,34 +1,38 @@
 const socket = io();
 
-// Create a dragable circle.
-const circle = document.querySelector("#circle");
+// Buttons to connect to the rooms.
 
-document.addEventListener("mousedown", e => {
-    document.addEventListener("mousemove", drag);
-});
+const connectRoom1 = document.querySelector('#connectRoom1');
+const connectRoom2 = document.querySelector('#connectRoom2');
+const connectRoom3 = document.querySelector('#connectRoom3');
 
-document.addEventListener("click", e => {
-    document.removeEventListener("mousemove", drag);
-});
+// Listen clicks in order to emit to the server.
 
-// Utility function to draw the new position.
-const drawCircle = position => {
-    circle.style.top = position.top;
-    circle.style.left = position.left;
-};
+connectRoom1.addEventListener('click', () => {
+    socket.emit('connect to room', 'room1');
+})
 
-// When the moved, update position locally and notify server.
-const drag = e => {
-    const position = {
-        top: e.clientY + "px",
-        left: e.clientX + "px"
-    };
-    drawCircle(position);
-    socket.emit('move-circle', position);
-};
+connectRoom2.addEventListener('click', () => {
+    socket.emit('connect to room', 'room2');
+})
 
-// If I moved the circle, I will not be notified here.
-socket.on('move-circle-all', position => {
-    drawCircle(position);
-});
+connectRoom3.addEventListener('click', () => {
+    socket.emit('connect to room', 'room3');
+})
 
+// Send message.
+const sendMessage = document.querySelector('#sendMessage');
+sendMessage.addEventListener('click', () => {
+    const message = prompt('Write your message:');
+    socket.emit('message', message);
+})
+
+// Receive the message from the server.
+socket.on('send message', data => {
+    const { message } = data;
+    const { room } = data;
+
+    const li = document.createElement('li');
+    li.textContent = message;
+    document.querySelector('#' + room).append(li);
+})
