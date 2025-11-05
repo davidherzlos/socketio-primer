@@ -16,25 +16,15 @@ app.use(express.static(path.join(__dirname, 'views')));
 // Dispatch routes (express).
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/views/index.html');
-})
+});
 
 // Listen for socket connections.
 io.on('connection', socket => {
-
-    // Emit the welcome event to the client.
-    socket.emit('welcome', 'You are connected 😀');
-
-    // Listen thanks event emitted from the client.
-    socket.on('thanks', data => {
-        console.log(data);
-    })
-
-    // Listen hi event emitted from the client and emitted back to all.
-    socket.on('hitoall', data => {
-        io.emit('replytoall', data + ' ' + socket.id);
-    })
-
-})
+    socket.on('move-circle', position => {
+        // Broadcast event for all clients, except the client that emitted.
+        socket.broadcast.emit('move-circle-all', position);
+    });
+});
 
 // Listen for server connections.
 httpServer.listen(3000);

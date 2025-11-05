@@ -1,21 +1,34 @@
 const socket = io();
 
-// Listen welcome event emitted from the server.
-socket.on('welcome', data => {
-    document.querySelector('#welcomemsg').textContent = data;
-})
+// Create a dragable circle.
+const circle = document.querySelector("#circle");
 
-// Emit the thanks event to the server.
-document.querySelector('#thanksmsg').addEventListener('click', () => {
-    socket.emit('thanks', 'Hi. Thanks! 😀');
-})
+document.addEventListener("mousedown", e => {
+    document.addEventListener("mousemove", drag);
+});
 
-// Emit the hi event to the server.
-document.querySelector('#sayhi').addEventListener('click', () => {
-    socket.emit('hitoall', 'Hi all! 😀');
-})
+document.addEventListener("click", e => {
+    document.removeEventListener("mousemove", drag);
+});
 
-// Listen the hi event back to all from the server.
-socket.on('replytoall', data => {
-    document.querySelector('#hitoallmsg').append('</br>' + data);
-})
+// Utility function to draw the new position.
+const drawCircle = position => {
+    circle.style.top = position.top;
+    circle.style.left = position.left;
+};
+
+// When the moved, update position locally and notify server.
+const drag = e => {
+    const position = {
+        top: e.clientY + "px",
+        left: e.clientX + "px"
+    };
+    drawCircle(position);
+    socket.emit('move-circle', position);
+};
+
+// If I moved the circle, I will not be notified here.
+socket.on('move-circle-all', position => {
+    drawCircle(position);
+});
+
