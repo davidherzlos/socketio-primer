@@ -7,16 +7,9 @@
         <title>Socket IO server</title>
     </head>
     <body>
-        <ul class='room' id='room1'>Room 1 messages</ul>
-        <ul class='room' id='room2'>Room 2 messages</ul>
-        <ul class='room' id='room3'>Room 3 messages</ul>
-
-        <div class='buttons'>
-            <button id='connectRoom1'>Connect Room1</button>
-            <button id='connectRoom2'>Connect Room2</button>
-            <button id='connectRoom3'>Connect Room3</button>
-            <button id='sendMessage'>Send message to Room</button>
-        </div>
+        <h1>Chat of <span id='namespace'></span></h1>
+        <ul id="chat"></ul>
+        <button id='sendMessage'>Send messsage</button>
 
         <script src='/socket.io/socket.io.js'> </script>
         <script src='/js/index.js'> </script>

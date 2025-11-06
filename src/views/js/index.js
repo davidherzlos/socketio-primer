@@ -1,38 +1,39 @@
-const socket = io();
+const user = prompt('Type your username');
+const teachers = ['Marx', 'Engels', 'Lenin'];
 
-// Buttons to connect to the rooms.
+let socketNamespace, group;
 
-const connectRoom1 = document.querySelector('#connectRoom1');
-const connectRoom2 = document.querySelector('#connectRoom2');
-const connectRoom3 = document.querySelector('#connectRoom3');
+const chat = document.querySelector('#chat');
+const namespace = document.querySelector('#namespace');
 
-// Listen clicks in order to emit to the server.
+// IO can receive a namespace as parameter.
+if (teachers.includes(user)) {
+    socketNamespace = io('/teachers');
+    group = 'teachers';
+} else {
+    socketNamespace = io('/students');
+    group = 'students';
+}
 
-connectRoom1.addEventListener('click', () => {
-    socket.emit('connect to room', 'room1');
-})
+// We listen the connect event to update the group.
+socketNamespace.on('connect', () => {
+    namespace.textContent = group;
+});
 
-connectRoom2.addEventListener('click', () => {
-    socket.emit('connect to room', 'room2');
-})
-
-connectRoom3.addEventListener('click', () => {
-    socket.emit('connect to room', 'room3');
-})
-
-// Send message.
+// Sending messages to the server.
 const sendMessage = document.querySelector('#sendMessage');
 sendMessage.addEventListener('click', () => {
-    const message = prompt('Write your message:');
-    socket.emit('message', message);
-})
+    const message = prompt('Type your message');
+    socketNamespace.emit('send-message', {
+        message,
+        user
+    });
+});
 
-// Receive the message from the server.
-socket.on('send message', data => {
-    const { message } = data;
-    const { room } = data;
-
-    const li = document.createElement('li');
-    li.textContent = message;
-    document.querySelector('#' + room).append(li);
-})
+// We listen the connection to post the message to the target group.
+socketNamespace.on('message', messageData => {
+    const { user, message } = messageData;
+    const li = document. createElement('li');
+    li.textContent = `${user}: ${message}`;
+    chat.append(li);
+});

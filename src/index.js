@@ -18,44 +18,24 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/views/index.html');
 });
 
-// Listen for socket connections.
-io.on('connection', socket => {
-    socket.connectedRoom = '';
-    socket.on('connect to room', room => {
+// Create two socket namespaces (teachers and students).
+const teachers = io.of('teachers');
+const students = io.of('students');
 
-        // In case we want to force the user to leave the connected room:
-        const onlyOneRoomPerUser = false;
-        if (onlyOneRoomPerUser) {
-            socket.leave(socket.connectedRoom);
-        }
+// Each namespace can be listened separately.
+teachers.on('connection', socket => {
+    console.log(socket.id + ' has connected to the teachers namespace');
+    socket.on('send-message', data => {
+        teachers.emit('message', data);
+    });
+});
 
-        switch (room) {
-            case 'room1':
-                socket.join('room1');
-                socket.connectedRoom = 'room1';
-                console.log(socket.connectedRoom);
-                break;
-            case 'room2':
-                socket.join('room2');
-                socket.connectedRoom = 'room2';
-                console.log(socket.connectedRoom);
-                break;
-            case 'room3':
-                socket.join('room3');
-                socket.connectedRoom = 'room3';
-                console.log(socket.connectedRoom);
-                break;
-            default:
-                break;
-        }
-    })
-    socket.on('message', message => {
-        const room = socket.connectedRoom;
-        io.to(room).emit('send message', {
-            message,
-            room
-        })
-    })
+// Each namespace can be listened separately.
+students.on('connection', socket => {
+    console.log(socket.id + ' has connected to the students namespace');
+    socket.on('send-message', data => {
+        students.emit('message', data);
+    });
 });
 
 // Listen for server connections.
