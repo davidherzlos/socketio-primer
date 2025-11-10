@@ -7,9 +7,9 @@
         <title>Socket IO server</title>
     </head>
     <body>
-        <h1>Chat of <span id='namespace'></span></h1>
-        <ul id="chat"></ul>
-        <button id='sendMessage'>Send messsage</button>
+        <button id='send'>Send to all clients connected</button>
+        <button id='disconnect'>Disconnect</button>
+        <button id='reconnect'>Reconnect</button>
 
         <script src='/socket.io/socket.io.js'> </script>
         <script src='/js/index.js'> </script>

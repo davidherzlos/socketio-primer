@@ -1,39 +1,56 @@
-const user = prompt('Type your username');
-const teachers = ['Marx', 'Engels', 'Lenin'];
+const socket = io();
 
-let socketNamespace, group;
+const send = document.querySelector('#send');
+const disconnect = document.querySelector('#disconnect');
+const reconnect = document.querySelector('#reconnect');
 
-const chat = document.querySelector('#chat');
-const namespace = document.querySelector('#namespace');
+// Just a little closure for a counter.
+const counter = (() => {
+    let counter = 0;
+    return () => {
+        counter += 1;
+        return counter;
+    };
+})();
 
-// IO can receive a namespace as parameter.
-if (teachers.includes(user)) {
-    socketNamespace = io('/teachers');
-    group = 'teachers';
-} else {
-    socketNamespace = io('/students');
-    group = 'students';
-}
+// A litte feature flag for testing.
+const controlEvents = false;
 
-// We listen the connect event to update the group.
-socketNamespace.on('connect', () => {
-    namespace.textContent = group;
+// Send 'is connected' event.
+send.addEventListener('click', () => {
+    // If the client is not connected, the events are buffered so they
+    // are by default emitted when the connection is back. That can overhead
+    // the app if there are many events and many clients. So we need to
+    // check if the socked is connected we only emit if the connection
+    // is on.
+
+    // Option one: connected attr checking.
+    if (socket.connected && controlEvents) {
+        socket.emit('is connected', 'You are connected!! ' + counter());
+        return;
+    }
+
+    // Option two: volatile events (more succint).
+    // Volatile events allows emitting only is connection is on.
+    if (controlEvents) {
+        socket.volatile.emit('is connected', 'You are connected!! ' + counter());
+        return;
+    }
+
+    // Emit by default if no 'buffer' contention technique is used.
+    if (!controlEvents) {
+        socket.emit('is connected', 'You are connected!! ' + counter());
+        return;
+    }
+
 });
 
-// Sending messages to the server.
-const sendMessage = document.querySelector('#sendMessage');
-sendMessage.addEventListener('click', () => {
-    const message = prompt('Type your message');
-    socketNamespace.emit('send-message', {
-        message,
-        user
-    });
+// Send 'disconnect' event manually.
+disconnect.addEventListener('click', () => {
+    socket.disconnect();
 });
 
-// We listen the connection to post the message to the target group.
-socketNamespace.on('message', messageData => {
-    const { user, message } = messageData;
-    const li = document. createElement('li');
-    li.textContent = `${user}: ${message}`;
-    chat.append(li);
+// Send 'connected' event manually.
+reconnect.addEventListener('click', () => {
+    socket.connect();
 });

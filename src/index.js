@@ -18,23 +18,10 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/views/index.html');
 });
 
-// Create two socket namespaces (teachers and students).
-const teachers = io.of('teachers');
-const students = io.of('students');
-
-// Each namespace can be listened separately.
-teachers.on('connection', socket => {
-    console.log(socket.id + ' has connected to the teachers namespace');
-    socket.on('send-message', data => {
-        teachers.emit('message', data);
-    });
-});
-
-// Each namespace can be listened separately.
-students.on('connection', socket => {
-    console.log(socket.id + ' has connected to the students namespace');
-    socket.on('send-message', data => {
-        students.emit('message', data);
+// Listen 'is connected' event.
+io.on('connection', socket => {
+    socket.on('is connected', msg => {
+        console.log(msg);
     });
 });
 
