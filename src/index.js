@@ -18,11 +18,24 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/views/index.html');
 });
 
+// Middlewares for authentication.
+io.use((socket, next) => {
+    const token = socket.handshake.auth.token;
+    if (token == 'brownini') {
+        next();
+    }
+    else {
+        const err = new Error('Not allowed');
+        err.data = {
+            details: 'Not was able to authenticate'
+        };
+        next(err);
+    }
+});
+
 // Listen 'is connected' event.
 io.on('connection', socket => {
-    socket.on('is connected', msg => {
-        console.log(msg);
-    });
+    console.log(socket.id);
 });
 
 // Listen for server connections.
