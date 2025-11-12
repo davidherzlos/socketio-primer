@@ -29,14 +29,32 @@ describe('Testing Socket.io', () => {
         clientSocket.close();
     });
 
-    // Test cases.
+    // Some test cases.
     test('Test event', done => {
         clientSocket.on('greeting', greet => {
+            try {
             expect(greet).toBe('Holi');
             done();
+            } catch (error) {
+            done(error);
+            }
         });
-        serverSocket.emit('greeting', 'hola');
+        serverSocket.emit('greeting', 'Holi');
     });
 
+    // Testing acknoledgements (callbacks).
+    test('Testing callbacks', done => {
+        serverSocket.on('bark', callback => {
+            callback('woof!')
+        });
+        clientSocket.emit('bark', arg => {
+            try {
+                expect(arg).toBe('woof!')
+                done();
+            } catch (error) {
+                done(error);
+            }
+        });
+    })
 });
 
