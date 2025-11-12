@@ -1,8 +1,3 @@
-// Enable debuging of all information.
-process.env.DEBUG = '*';
-process.env.DEBUG = 'socket.io:socket';
-// process.env.DEBUG = 'engine, socket.io:socket, socket.io:client';
-
 const express = require('express');
 const { createServer } = require('http');
 const path = require('path');
